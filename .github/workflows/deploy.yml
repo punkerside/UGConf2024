@@ -19,9 +19,10 @@ jobs:
     - name: Mostrar el contexto de Port
       run: |
         echo "Recibiendo el contexto desde Port: ${{ github.event.inputs.port_context }}"
+        echo "Bucket Name: ${{ github.event.inputs.bucket_name }}"
     
     - name: Ejecutar Terraform
       run: |
         cd modules/bucket/
         terraform init
-        terraform apply -auto-approve
+        terraform apply -auto-approve -var="bucket_name=ami-abc123"
