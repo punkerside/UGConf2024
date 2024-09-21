@@ -3,6 +3,10 @@ name: Ejecutar Terraform
 on:
   workflow_dispatch:
     inputs:
+      port_context:
+        description: 'Contexto desde Port'
+        required: false
+        default: '{}'
       bucket_name:
         description: 'Nombre del bucket'
         required: true
@@ -14,9 +18,9 @@ jobs:
     steps:
     - name: Checkout código
       uses: actions/checkout@v2
-    
+
     - name: Ejecutar Terraform
       run: |
         cd modules/bucket/
         terraform init
-        terraform apply -auto-approve -var="bucket_name=${{ github.event.inputs.bucket_name }}"
+        terraform apply -auto-approve -var="bucket_name=ami-abc123"
