@@ -61,7 +61,7 @@ jobs:
         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
         baseUrl: https://api.getport.io
         operation: PATCH_RUN
-        runId: ${{ fromJson(inputs.port_context).rund_id }}
+        runId: ${{ fromJson(inputs.port_context).runId }}
         logMessage: "Upserting created Bucket S3 to Port ... "
 
     - name: UPSERT EC2 Instance Entity
@@ -80,4 +80,4 @@ jobs:
         clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
         baseUrl: https://api.getport.io
         operation: UPSERT
-        runId: ${{ fromJson(inputs.port_context).rund_id }}
+        runId: ${{ fromJson(inputs.port_context).runId }}
