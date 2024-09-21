@@ -41,7 +41,7 @@ jobs:
           -H "Content-Type: application/json" \
           -d '{
             "name": "${{ github.event.inputs.bucket_name }}",
-            "type": "aws_s3_bucket",
+            "type": "buckets",
             "properties": {
               "region": "us-east-1"
             }
