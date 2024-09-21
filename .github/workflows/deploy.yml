@@ -11,7 +11,10 @@ on:
         description: 'Nombre del bucket'
         required: true
       environment:
-        description: 'Nombre del bucket'
+        description: 'Nombre del ambiente'
+        required: true
+      is_public:
+        description: 'Definir si el bucket es publico'
         required: true
 
 env:
@@ -46,3 +49,49 @@ jobs:
               "region": "us-east-1"
             }
           }'
+
+    - name: Set Outputs
+      id: set_outputs
+      run: |
+        cd <TERRAFORM-TEMPLATE-DIR>
+        echo "bucket_name=${{ github.event.inputs.bucket_name }}" >> $GITHUB_ENV
+        echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+        echo "is_public=${{ github.event.inputs.is_public }}" >> $GITHUB_ENV
+
+    - name: Create a log message
+      uses: port-labs/port-github-action@v1
+      with:
+        clientId: ${{ secrets.PORT_CLIENT_ID }}
+        clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+        operation: PATCH_RUN
+        runId: ${{ fromJson(inputs.port_context).rund_id }}
+        logMessage: |
+            EC2 Instance created successfully ✅
+
+    - name: Report Created Instance to Port
+      uses: port-labs/port-github-action@v1
+      with:
+        clientId: ${{ secrets.PORT_CLIENT_ID }}
+        clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+        baseUrl: https://api.getport.io
+        operation: PATCH_RUN
+        runId: ${{ fromJson(inputs.port_context).rund_id }}
+        logMessage: "Upserting created Bucket S3 to Port ... "
+
+    - name: UPSERT EC2 Instance Entity
+      uses: port-labs/port-github-action@v1
+      with:
+        identifier: "${{ github.event.inputs.bucket_name }}"
+        title: "${{ github.event.inputs.bucket_name }}"
+        blueprint: ${{ fromJson(inputs.port_context).blueprint }}
+        properties: |-
+          {
+            "bucket_name": "${{ env.bucket_name }}",
+            "environment": "${{ env.environment }}",
+            "is_public": "${{ env.is_public }}",
+          }
+        clientId: ${{ secrets.PORT_CLIENT_ID }}
+        clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+        baseUrl: https://api.getport.io
+        operation: UPSERT
+        runId: ${{ fromJson(inputs.port_context).rund_id }}
