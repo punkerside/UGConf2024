@@ -37,19 +37,6 @@ jobs:
         terraform init
         terraform apply -auto-approve -var="bucket_name=${{ github.event.inputs.bucket_name }}" -var="environment=${{ github.event.inputs.environment }}"
 
-    - name: Report to Port
-      run: |
-        curl -X POST https://api.getport.io/v1/buckets \
-          -H "Authorization: Bearer ${{ secrets.PORT_API_TOKEN }}" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "name": "${{ github.event.inputs.bucket_name }}",
-            "type": "buckets",
-            "properties": {
-              "region": "us-east-1"
-            }
-          }'
-
     - name: Set Outputs
       id: set_outputs
       run: |
