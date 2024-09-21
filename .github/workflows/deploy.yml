@@ -40,7 +40,6 @@ jobs:
     - name: Set Outputs
       id: set_outputs
       run: |
-        cd <TERRAFORM-TEMPLATE-DIR>
         echo "bucket_name=${{ github.event.inputs.bucket_name }}" >> $GITHUB_ENV
         echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
         echo "is_public=${{ github.event.inputs.is_public }}" >> $GITHUB_ENV
