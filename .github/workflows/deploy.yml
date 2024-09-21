@@ -33,3 +33,16 @@ jobs:
         cd modules/bucket/
         terraform init
         terraform apply -auto-approve -var="bucket_name=${{ github.event.inputs.bucket_name }}" -var="environment=${{ github.event.inputs.environment }}"
+
+    - name: Report to Port
+      run: |
+        curl -X POST https://api.getport.io/v1/buckets \
+          -H "Authorization: Bearer ${{ secrets.PORT_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "name": "${{ github.event.inputs.bucket_name }}",
+            "type": "aws_s3_bucket",
+            "properties": {
+              "region": "us-east-1"
+            }
+          }'
