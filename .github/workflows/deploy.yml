@@ -24,6 +24,7 @@ jobs:
 
     - name: Ejecutar Terraform
       run: |
+        aws sts get-caller-identity
         cd modules/bucket/
         terraform init
         terraform apply -auto-approve -var="bucket_name=${{ github.event.inputs.bucket_name }}" -var="environment=${{ github.event.inputs.environment }}"
