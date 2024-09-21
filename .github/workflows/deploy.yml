@@ -22,5 +22,6 @@ jobs:
     
     - name: Ejecutar Terraform
       run: |
+        cd modules/bucket/
         terraform init
         terraform apply -auto-approve
