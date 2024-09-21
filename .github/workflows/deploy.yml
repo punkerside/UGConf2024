@@ -1,0 +1,41 @@
+name: Terraform Deployment
+
+jobs:
+  terraform:
+    name: Apply Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Chequear el código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar AWS credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 3. Instalar Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0  # Especifica la versión de Terraform
+
+      # 4. Inicializar Terraform (configurar backend remoto)
+      - name: Terraform Init
+        run: terraform init
+
+      # 5. Validar la configuración de Terraform
+      - name: Terraform Validate
+        run: terraform validate
+
+      # 6. Planificar cambios (opcional pero recomendado)
+      - name: Terraform Plan
+        run: terraform plan
+
+      # 7. Aplicar los cambios (auto-aprobación)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
