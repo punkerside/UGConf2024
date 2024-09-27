@@ -64,13 +64,6 @@ jobs:
         with:
           terraform_version: 1.7.5
 
-      - name: Make provider binary executable
-        run: |
-          cd terraform-artifact
-          ls -la
-          terraform version
-          chmod +x .terraform/providers/registry.terraform.io/hashicorp/aws/5.42.0/linux_amd64/terraform-provider-aws_v5.42.0_x5
-
       - name: Terraform apply resource
         id:   tf-apply
         run: |
